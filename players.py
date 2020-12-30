@@ -7,8 +7,6 @@ class Player:
         h = screen.get_height()
         w = screen.get_width()
 
-
-
         self.active = False
         self.name = name
         self.handPos = handPos
@@ -18,52 +16,32 @@ class Player:
         self.linkNegative = False
         self.linkPositive = False
         self.deckImg = pg.image.load(r"assets\images\cards\cardback.png")
+        self.text = font.render(self.name,True,pg.Color("Black"))
+        
         center = pg.math.Vector2(w/2,h/2)
-
         dist = self.handPos - center 
-
 
         self.leftNeighbour = center + dist.rotate(angle*-1)
         self.rightNeighbour = center + dist.rotate(angle)
 
         a = handPos
-        dist = self.leftNeighbour - a
-
-        dist = dist / 10
-
+        dist = (self.leftNeighbour - a) / 10
         lineList = []
         for i in range(11):
             lineList.append(a)
             a = a + dist
-        
-        #for point in lineList[1:-1]:
-            #point.x = point.x + randint(-20,20)
-            #point.y = point.y + randint(-20,20)
-
         self.leftList = lineList 
 
 
         a = handPos
-        dist = self.rightNeighbour - a
-
-        dist = dist / 10
-
+        dist = (self.rightNeighbour - a)/10
         lineList = []
         for i in range(11):
             lineList.append(a)
             a = a + dist
-        
-        #for point in lineList[1:-1]:
-            #point.x = point.x + randint(-20,20)
-            #point.y = point.y + randint(-20,20)
-
         self.rightList = lineList  
             
-
-
-
-
-        self.text = font.render(self.name,True,pg.Color("Black"))
+         
         
     def drawLines(self,screen):
         if self.active:
@@ -108,7 +86,7 @@ class Player:
     def drawBacks(self,screen):
         imgH = self.deckImg.get_height()
         imgW = self.deckImg.get_width()
-        #i = 0
+        
         if self.hand:
             for i in range(0,len(self.hand)):
                 pg.draw.rect(screen,pg.Color("White"),(self.handPos.x-imgW/3+(i*2),self.handPos.y-imgH/3+(i*2),imgW-1,imgH-2),border_radius=7)
@@ -121,8 +99,8 @@ class Player:
     def dealCard(self):
         card = self.hand.pop()
         self.currentCard = card
-        print("{:} draws a {:} of {:}".format(self.name,card.value,card.suit))
-        #self.draw(screen)
+        
+        
         
 
     def checkNeighbours(self, players, index):

@@ -62,14 +62,8 @@ def createPlayers(players,deck):
             
 
     return playerList
-"""
-def Countdown():
-    t = 10
-    while t:
-        print(t)
-        t -= 1
-        clock.tick(1)
-"""
+
+
 
 def getConnected(players):
     connected = []
@@ -111,7 +105,7 @@ def getConnected(players):
 def countSound(count):
     numSound = mixer.Sound(r"assets\sounds\\" + str(count) + ".mp3")
     mixer.Sound.play(numSound)
-    #mixer.Sound.stop(numSound)
+    
 
 
 
@@ -119,10 +113,8 @@ def countSound(count):
 def main(players):
     highVal = 0
     frameCount = 0
-    #timeElapsed = 0
     nextCard = False
     currentPlayer = -1
-    #cardsLeft = 0
     countdown = False
     newFrame = True
     while True:
@@ -171,10 +163,7 @@ def main(players):
 
 
 
-        #CHECK IF ANY CARDS ARE LEFT
-        if cardsLeft == 0:
-            #TODO - END STATE
-            pass
+        
 
 
 
@@ -191,8 +180,7 @@ def main(players):
                 players[currentPlayer].dealCard()
                 cardsLeft -= 1
                 players[currentPlayer].checkNeighbours(players, currentPlayer)
-            #else:
-                #players[currentPlayer].active = False
+            
             nextCard = False
         
 
@@ -222,8 +210,7 @@ def main(players):
                 frameCount = 0
                 highVal -= 1
                 newFrame = True
-                #if highVal > 0:
-                    #countSound(highVal)
+                
            
             print(highVal)
             if highVal == 0:
@@ -243,8 +230,11 @@ def main(players):
 
         print(highVal)
         pg.display.update()
-        #print(clock.get_fps())
+        
         clock.tick(60)
+
+
+        
 def __init__():
     players = []
     playerText = []
@@ -257,4 +247,4 @@ def __init__():
     deck = createDeck()
     players = createPlayers(players,deck)
     main(players)
-    #return deck, players
+   
