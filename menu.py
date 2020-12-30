@@ -103,8 +103,9 @@ resetColour()
 
 startGame = False
 #playsound(r"C:\Users\James\Music\quizsongs\feel.mp3")
-mixer.music.load(r"assets\sounds\feel.mp3")
-pygame.mixer.music.play(-1)
+mixer.music.load(r"assets\sounds\naive.mp3")
+mixer.music.play(-1)
+mixer.music.set_volume(0.05)
     
 while startGame == False:
 
