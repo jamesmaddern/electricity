@@ -121,7 +121,7 @@ def main(players):
     frameCount = 0
     #timeElapsed = 0
     nextCard = False
-    currentPlayer = 0
+    currentPlayer = -1
     #cardsLeft = 0
     countdown = False
     newFrame = True
