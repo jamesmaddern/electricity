@@ -103,8 +103,11 @@ def getConnected(players):
 
 
 def countSound(count):
-    numSound = mixer.Sound(r"assets\sounds\\" + str(count) + ".mp3")
-    mixer.Sound.play(numSound)
+    try:
+        numSound = mixer.Sound(r"assets\sounds\\" + str(count) + ".mp3")
+        mixer.Sound.play(numSound)
+    except:
+        pass
     
 
 
