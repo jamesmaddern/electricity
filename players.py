@@ -15,7 +15,7 @@ class Player:
         self.currentCard = None
         self.linkNegative = False
         self.linkPositive = False
-        self.deckImg = pg.image.load(r"assets\images\cards\cardback.png")
+        self.deckImg = pg.image.load(r"assets/images/cards/cardback.png")
         self.text = font.render(self.name,True,pg.Color("Black"))
         
         center = pg.math.Vector2(w/2,h/2)

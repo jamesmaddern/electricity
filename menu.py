@@ -1,14 +1,16 @@
 import pygame, math, sys
+from Button import Button
 from inputBox import InputBox as ib
 from pygame import draw,Color,Rect,mixer
 
 #SETUP
 pygame.init()
-screen = pygame.display.set_mode((1920,1080))
+#pygame.mixer.init()
+screen = pygame.display.set_mode((900,600),pygame.RESIZABLE)
 clock = pygame.time.Clock()
-mixer.music.load(r"assets\sounds\naive.mp3")
-mixer.music.play(-1)
-mixer.music.set_volume(0.05)
+# mixer.music.load(r"assets\sounds\naive.mp3")
+# mixer.music.play(-1)
+# mixer.music.set_volume(0.05)
 
 
 
@@ -18,7 +20,7 @@ logoFont = pygame.font.SysFont("Autodiagraphic", 148)
 
 
 #LOGO
-logo = pygame.image.load(r"assets\images\logo.png")
+logo = pygame.image.load(r"assets/images/logo.png")
 logoRect = logo.get_rect()
 logoText = logoFont.render("ELECTRICITY",True,Color("Black"))
 
@@ -71,32 +73,27 @@ def allignText(button,text):
 
 
 
-#BUTTONS
-addPlayerBtn = pygame.Rect(w-200,20,200,40)
-addPlayerTxt = buttonFont.render("Add Player",True,Color(255,215,10))
-addPlayerTxtBox = allignText(addPlayerBtn, addPlayerTxt)
-
-rmvPlayerBtn = pygame.Rect(w-200,70,200,40)
-rmvPlayerTxt = buttonFont.render("Remove Player",True,Color(255,215,10))
-rmvPlayerTxtBox = allignText(rmvPlayerBtn, rmvPlayerTxt)
-
-clrPlayerBtn = pygame.Rect(w-200,120,200,40)
-clrPlayerTxt = buttonFont.render("Clear Players",True,Color(255,215,10))
-clrPlayerTxtBox = allignText(clrPlayerBtn, clrPlayerTxt)
-
-startGameBtn = pygame.Rect(w-200,h-60,200,40)
-startGameTxt = buttonFont.render("Start Game",True,Color(255,215,10))
-startGameTxtBox = allignText(startGameBtn, startGameTxt)
-
-quitGameBtn = pygame.Rect(0,h-60,200,40)
-quitGameTxt = buttonFont.render("Quit Game",True,Color(255,215,10))
-quitGameTxtBox = allignText(quitGameBtn, quitGameTxt)
-
-
-
-
-
-
+#INITIALISE BUTTONS
+buttonList = [Button(pygame.Rect(w-200,20,200,40),
+                        buttonFont,
+                        "Add Player",
+                        Color(255,215,10)),
+                Button(pygame.Rect(w-200,70,200,40),
+                        buttonFont,
+                        "Remove Player",
+                        Color(255,215,10)),
+                Button(pygame.Rect(w-200,120,200,40),
+                        buttonFont,
+                        "Clear Players",
+                        Color(255,215,10)),
+                Button(pygame.Rect(w-200,h-60,200,40),
+                        buttonFont,
+                        "Start Game",
+                        Color(255,215,10)),
+                Button(pygame.Rect(0,h-60,200,40),
+                        buttonFont,
+                        "Quit Game",
+                        Color(255,215,10))]
 
 
 #RESETING COLOUR OF INPUT BOX TEXT WHEN NOT ACTIVE
@@ -118,6 +115,8 @@ resetColour()
 
 #############GAME LOOP#################
 while startGame == False:
+    w = screen.get_width()
+    h = screen.get_height()
     #EVENT LOOP
     for event in pygame.event.get():
         #QUIT
@@ -131,39 +130,61 @@ while startGame == False:
                     box.enterText(event)
         #CLICK HANDLING    
         if event.type == pygame.MOUSEBUTTONDOWN:
+            for button in buttonList:
+                if button.rect.collidepoint(event.pos):
+                    print(f"button {button.name} clicked")
+                    match button.name:
+                        case "Add Player":
+                            if numOfPlayers < 9:
+                                createInputBox()
+                        case "Remove Player":
+                            if numOfPlayers > 2:
+                                destroyInputBox()
+                        case "Clear Players":
+                            clearInputBox()
+                        case "Start Game":
+                            startGame = True
+                        case "Quit Game":
+                            pygame.quit()
+                            sys.exit(0)
+            for button in inputBoxList:
+                if button.rect.collidepoint(event.pos):
+                    button.active = not button.active
+                else:
+                    button.active = False
             #ADD PLAYER BUTTON CLICKED
-            if addPlayerBtn.collidepoint(event.pos):
-                if numOfPlayers < 9:
-                    createInputBox()
-                    addColour = "yellow"
-                else:
-                    addColour = "red"
-            #REMOVE PLAYER BUTTON CLICKED
-            elif rmvPlayerBtn.collidepoint(event.pos):
-                if numOfPlayers > 2:
-                    destroyInputBox()
-                    rmvColour = "yellow"
-                else:
-                    rmvColour = "red"
-            #CLEAR PLAYERS BUTTON CLICKED
-            elif clrPlayerBtn.collidepoint(event.pos):
+            # if addPlayerBtn.collidepoint(event.pos):
+            #     if numOfPlayers < 9:
+            #         createInputBox()
+            #         addColour = "yellow"
+            #     else:
+            #         addColour = "red"
+            # #REMOVE PLAYER BUTTON CLICKED
+            # elif rmvPlayerBtn.collidepoint(event.pos):
+            #     if numOfPlayers > 2:
+            #         destroyInputBox()
+            #         rmvColour = "yellow"
+            #     else:
+            #         rmvColour = "red"
+            # #CLEAR PLAYERS BUTTON CLICKED
+            # elif clrPlayerBtn.collidepoint(event.pos):
                 
-                clearInputBox()
-                clrColour = "yellow"
-            #START GAME BUTTON CLICKED
-            elif startGameBtn.collidepoint(event.pos):
-                startGame = True
-            #QUIT GAME BUTTON CLICKED
-            elif quitGameBtn.collidepoint(event.pos):
-                pygame.quit()
-                sys.exit()
-            else:
-                #IF ANYWHERE IS CLICKED WHILE A BOX IS ACTIVE THEN IT BECOMES NOT ACTIVE
-                for box in inputBoxList:
-                    if box.rect.collidepoint(event.pos):
-                        box.active = not box.active
-                    else:
-                        box.active = False
+            #     clearInputBox()
+            #     clrColour = "yellow"
+            # #START GAME BUTTON CLICKED
+            # elif startGameBtn.collidepoint(event.pos):
+            #     startGame = True
+            # #QUIT GAME BUTTON CLICKED
+            # elif quitGameBtn.collidepoint(event.pos):
+            #     pygame.quit()
+            #     sys.exit()
+            # else:
+            #     #IF ANYWHERE IS CLICKED WHILE A BOX IS ACTIVE THEN IT BECOMES NOT ACTIVE
+            #     for box in inputBoxList:
+            #         if box.rect.collidepoint(event.pos):
+            #             box.active = not box.active
+            #         else:
+            #             box.active = False
                         
                 
         if event.type == pygame.MOUSEBUTTONUP:
@@ -174,20 +195,13 @@ while startGame == False:
     screen.fill(Color(255,215,10))
 
     #DRAWING BUTTONS
-    draw.rect(screen,Color(addColour),addPlayerBtn)
-    screen.blit(addPlayerTxt,addPlayerTxtBox)
-    draw.rect(screen,Color(rmvColour),rmvPlayerBtn)
-    screen.blit(rmvPlayerTxt,rmvPlayerTxtBox)
-    draw.rect(screen,Color(clrColour),clrPlayerBtn)
-    screen.blit(clrPlayerTxt,clrPlayerTxtBox)
-    draw.rect(screen,Color("Black"),startGameBtn)
-    screen.blit(startGameTxt,startGameTxtBox)
-    draw.rect(screen,Color("Black"),quitGameBtn)
-    screen.blit(quitGameTxt,quitGameTxtBox)
+    for button in buttonList:
+        button.draw(screen)
+    
 
     
     #DRAWING LOGO
-    screen.blit(logo,(w/2-logoRect.width/2,h/2-logoRect.width/2-100,100,100))
+    #screen.blit(logo,(w/2-logoRect.width/2,h/2-logoRect.width/2-100,100,100))
     screen.blit(logoText,(w/2 - logoText.get_width()/2,logoRect.height,1,1))
 
     #DRAWING INPUT BOXES
