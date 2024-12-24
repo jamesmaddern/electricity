@@ -6,7 +6,8 @@ from pygame import draw,Color,Rect,mixer
 #SETUP
 pygame.init()
 #pygame.mixer.init()
-screen = pygame.display.set_mode((900,600),pygame.RESIZABLE)
+display = pygame.display.set_mode((600,600),pygame.RESIZABLE)
+screen = pygame.surface.Surface((1920,1080))
 clock = pygame.time.Clock()
 # mixer.music.load(r"assets\sounds\naive.mp3")
 # mixer.music.play(-1)
@@ -115,8 +116,10 @@ resetColour()
 
 #############GAME LOOP#################
 while startGame == False:
-    w = screen.get_width()
-    h = screen.get_height()
+    w = display.get_width()
+    h = display.get_height()
+    xScale = 1920/w
+    yScale = 1080/h
     #EVENT LOOP
     for event in pygame.event.get():
         #QUIT
@@ -130,9 +133,11 @@ while startGame == False:
                     box.enterText(event)
         #CLICK HANDLING    
         if event.type == pygame.MOUSEBUTTONDOWN:
+            mX,yX = event.pos
+            mPos = (xScale * mX, yScale * yX)
+            
             for button in buttonList:
-                if button.rect.collidepoint(event.pos):
-                    print(f"button {button.name} clicked")
+                if button.rect.collidepoint(mPos):
                     match button.name:
                         case "Add Player":
                             if numOfPlayers < 9:
@@ -148,44 +153,12 @@ while startGame == False:
                             pygame.quit()
                             sys.exit(0)
             for button in inputBoxList:
-                if button.rect.collidepoint(event.pos):
+                if button.rect.collidepoint(mPos):
                     button.active = not button.active
                 else:
                     button.active = False
-            #ADD PLAYER BUTTON CLICKED
-            # if addPlayerBtn.collidepoint(event.pos):
-            #     if numOfPlayers < 9:
-            #         createInputBox()
-            #         addColour = "yellow"
-            #     else:
-            #         addColour = "red"
-            # #REMOVE PLAYER BUTTON CLICKED
-            # elif rmvPlayerBtn.collidepoint(event.pos):
-            #     if numOfPlayers > 2:
-            #         destroyInputBox()
-            #         rmvColour = "yellow"
-            #     else:
-            #         rmvColour = "red"
-            # #CLEAR PLAYERS BUTTON CLICKED
-            # elif clrPlayerBtn.collidepoint(event.pos):
-                
-            #     clearInputBox()
-            #     clrColour = "yellow"
-            # #START GAME BUTTON CLICKED
-            # elif startGameBtn.collidepoint(event.pos):
-            #     startGame = True
-            # #QUIT GAME BUTTON CLICKED
-            # elif quitGameBtn.collidepoint(event.pos):
-            #     pygame.quit()
-            #     sys.exit()
-            # else:
-            #     #IF ANYWHERE IS CLICKED WHILE A BOX IS ACTIVE THEN IT BECOMES NOT ACTIVE
-            #     for box in inputBoxList:
-            #         if box.rect.collidepoint(event.pos):
-            #             box.active = not box.active
-            #         else:
-            #             box.active = False
-                        
+        if event.type == pygame.VIDEORESIZE:
+            screen1 = pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)    
                 
         if event.type == pygame.MOUSEBUTTONUP:
             resetColour()
@@ -201,13 +174,15 @@ while startGame == False:
 
     
     #DRAWING LOGO
-    #screen.blit(logo,(w/2-logoRect.width/2,h/2-logoRect.width/2-100,100,100))
-    screen.blit(logoText,(w/2 - logoText.get_width()/2,logoRect.height,1,1))
+    screen.blit(logo,(screen.get_width()/2-logoRect.width/2,screen.get_height()/2-logoRect.width/2-100,100,100))
+    screen.blit(logoText,(screen.get_width()/2 - logoText.get_width()/2,logoRect.height,1,1))
 
     #DRAWING INPUT BOXES
     for box in inputBoxList:
         box.update(screen)
-        
+    
+
+    display.blit(pygame.transform.scale(screen, display.get_rect().size), (0, 0))
     pygame.display.update()
     clock.tick(30)
 #############GAME LOOP#################

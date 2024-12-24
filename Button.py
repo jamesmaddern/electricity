@@ -16,3 +16,9 @@ class Button:
     def draw(self,screen):
         pygame.draw.rect(screen,self.colour,self.rect)
         screen.blit(self.text,self.textbox)
+    
+    # def update(self,screen):
+    #     self.rect.x = screen.get_width() - 200
+    #     self.draw(screen)
+    #    # print(screen.width())
+        
