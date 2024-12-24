@@ -5,26 +5,18 @@ from pygame import draw,Color,Rect,mixer
 
 #SETUP
 pygame.init()
-#pygame.mixer.init()
 display = pygame.display.set_mode((600,600),pygame.RESIZABLE)
 screen = pygame.surface.Surface((1920,1080))
 clock = pygame.time.Clock()
-# mixer.music.load(r"assets\sounds\naive.mp3")
-# mixer.music.play(-1)
-# mixer.music.set_volume(0.05)
-
-
 
 #FONTS
 buttonFont = pygame.font.SysFont("Bahnschrift",28)
 logoFont = pygame.font.SysFont("Autodiagraphic", 148)
 
-
 #LOGO
 logo = pygame.image.load(r"assets/images/logo.png")
 logoRect = logo.get_rect()
 logoText = logoFont.render("ELECTRICITY",True,Color("Black"))
-
 
 #INITIALISING GLOBAL VARIABLES
 numOfPlayers = 0
@@ -32,14 +24,7 @@ startingPlayers = 9
 inputBoxList = []
 w = screen.get_width()
 h = screen.get_height()
-spacePressed = False
-index = 0
-buttonPressed = False
 startGame = False
-
-
-
-
 
 def createInputBox():
     global numOfPlayers
@@ -61,18 +46,6 @@ def clearInputBox():
 for i in range(1,startingPlayers+1):
     createInputBox()
     print(numOfPlayers)
-
-
-
-
-
-
-def allignText(button,text):
-    
-    textPos = (button.width - text.get_width())/2
-    return pygame.Rect(button.x+textPos, button.y,text.get_width(),text.get_height())
-
-
 
 #INITIALISE BUTTONS
 buttonList = [Button(pygame.Rect(w-200,20,200,40),
@@ -96,7 +69,6 @@ buttonList = [Button(pygame.Rect(w-200,20,200,40),
                         "Quit Game",
                         Color(255,215,10))]
 
-
 #RESETING COLOUR OF INPUT BOX TEXT WHEN NOT ACTIVE
 def resetColour():
     global addColour, rmvColour, clrColour
@@ -104,15 +76,6 @@ def resetColour():
     rmvColour = "Black"
     clrColour = "Black"
 resetColour()
-    
-
-
-
-
-
-
-
-
 
 #############GAME LOOP#################
 while startGame == False:
@@ -133,9 +96,9 @@ while startGame == False:
                     box.enterText(event)
         #CLICK HANDLING    
         if event.type == pygame.MOUSEBUTTONDOWN:
+            #SCALE MOUSE POSITION TO WINDOW SIZE
             mX,yX = event.pos
             mPos = (xScale * mX, yScale * yX)
-            
             for button in buttonList:
                 if button.rect.collidepoint(mPos):
                     match button.name:
@@ -158,7 +121,7 @@ while startGame == False:
                 else:
                     button.active = False
         if event.type == pygame.VIDEORESIZE:
-            screen1 = pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)    
+            display = pygame.display.set_mode(event.size, pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)    
                 
         if event.type == pygame.MOUSEBUTTONUP:
             resetColour()
@@ -170,29 +133,22 @@ while startGame == False:
     #DRAWING BUTTONS
     for button in buttonList:
         button.draw(screen)
-    
 
-    
     #DRAWING LOGO
     screen.blit(logo,(screen.get_width()/2-logoRect.width/2,screen.get_height()/2-logoRect.width/2-100,100,100))
     screen.blit(logoText,(screen.get_width()/2 - logoText.get_width()/2,logoRect.height,1,1))
 
     #DRAWING INPUT BOXES
     for box in inputBoxList:
-        box.update(screen)
-    
+        box.update(screen)    
 
+    #UPDATE DISPLAY
     display.blit(pygame.transform.scale(screen, display.get_rect().size), (0, 0))
     pygame.display.update()
     clock.tick(30)
 #############GAME LOOP#################
 
-
-
-
 playerList = []
-
-    
 with open(r"playerInfo\playerInfo.txt","w") as playerFile:
     for box in inputBoxList:
         playerFile.write(box.text + "\n")
